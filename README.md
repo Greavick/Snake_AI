@@ -11,3 +11,5 @@ arcade 2.1.3
 So far only the first version of the game is implemented.  
 To play simply execute main.py file and follow instructions.  
 Control the snake with arrow keys. 
+
+<br/><br/><img src="./img/snake_menu.PNG" alt="drawing" width="250"/><img src="./img/snake_game.PNG" alt="drawing" width="250"/><img src="./img/snake_summary.PNG" alt="drawing" width="250"/>
