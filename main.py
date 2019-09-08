@@ -1,11 +1,6 @@
 import arcade
 import random
 import PIL
-import os
-
-
-file_path = os.path.dirname(os.path.abspath(__file__))
-os.chdir(file_path)
 
 ROW_COUNT = 15
 COLUMN_COUNT = 15
@@ -18,30 +13,15 @@ SCREEN_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
 
 
 colors = [
+          # Empty cell - White
           (255,   255,   255),
+          # Wall - Brown
           (133, 87, 37),
+          # Apple - Red
           (255,   0, 0),
+          # Snake - Green
           (166,   200,   64)
           ]
-
-
-def create_textures():
-    texture_list = []
-    for color in colors:
-        image = PIL.Image.new('RGB', (WIDTH, HEIGHT), color)
-        texture_list.append(arcade.Texture(str(color), image=image))
-    return texture_list
-
-
-texture_list = create_textures()
-
-
-def new_board():
-    """ Create a grid of 0's. Add 1's to the borders of the board. """
-    board = [[1 for x in range(COLUMN_COUNT)]]
-    board += [[1] + [0 for x in range(COLUMN_COUNT-2)] + [1] for y in range(ROW_COUNT-2)]
-    board += [[1 for x in range(COLUMN_COUNT)]]
-    return board
 
 
 class MenuView(arcade.View):
@@ -64,8 +44,6 @@ class MenuView(arcade.View):
 
 class GameView(arcade.View):
     def __init__(self):
-        """ Set up the application. """
-
         super().__init__()
 
         arcade.set_background_color(arcade.color.BLACK)
@@ -79,17 +57,31 @@ class GameView(arcade.View):
         self.apple_col = int(random.randint(0, COLUMN_COUNT-1))
         self.apple_row = int(random.randint(0, ROW_COUNT-1))
         self.snake = [(COLUMN_COUNT//2, ROW_COUNT//2)]
+        self.texture_list = self.create_textures()
         self.dt = 0
+
+    def create_textures(self):
+        texture_list = []
+        for color in colors:
+            image = PIL.Image.new('RGB', (WIDTH, HEIGHT), color)
+            texture_list.append(arcade.Texture(str(color), image=image))
+        return texture_list
+
+    def new_board(self):
+        board = [[1 for x in range(COLUMN_COUNT)]]
+        board += [[1] + [0 for x in range(COLUMN_COUNT - 2)] + [1] for y in range(ROW_COUNT - 2)]
+        board += [[1 for x in range(COLUMN_COUNT)]]
+        return board
 
     def setup(self):
 
-        self.board = new_board()
+        self.board = self.new_board()
         self.board_sprite_list = arcade.SpriteList()
 
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
                 sprite = arcade.Sprite()
-                for texture in texture_list:
+                for texture in self.texture_list:
                     sprite.append_texture(texture)
                 sprite.set_texture(0)
                 sprite.center_x = (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
